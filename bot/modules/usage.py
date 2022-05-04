@@ -34,7 +34,7 @@ def dyno_usage(update, context):
         "Authorization": f"Bearer {HEROKU_API_KEY}",
         "Accept": "application/vnd.heroku+json; version=3.account-quotas",
     }
-    path = "/accounts/" + user_id + "/actions/get-quota"
+    path = f"/accounts/{user_id}/actions/get-quota"
     session = requests.Session()
     with session as ses:
         with ses.get(heroku_api + path, headers=headers) as r:
@@ -47,7 +47,7 @@ def dyno_usage(update, context):
             minutes_remain = quota_remain / 60
             hours = math.floor(minutes_remain / 60)
             minutes = math.floor(minutes_remain % 60)
-            
+
             """App Quota."""
             Apps = result["apps"]
             for apps in Apps:
@@ -61,7 +61,7 @@ def dyno_usage(update, context):
 
             AppHours = math.floor(AppQuotaUsed / 60)
             AppMinutes = math.floor(AppQuotaUsed % 60)
-            
+
             sendMessage(
                 f"<b>📈 Dyno Usage for</b> <code>{app.name}</code> :\n"
                 f"• <code>{AppHours}</code> <b>Hours and</b> <code>{AppMinutes}</code> <b>Minutes - {AppPercent}%</b>\n\n"

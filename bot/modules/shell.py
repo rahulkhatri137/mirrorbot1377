@@ -16,9 +16,7 @@ def dev_plus(func):
 
         if user.id == OWNER_ID:
             return func(update, context, *args, **kwargs)
-        elif not user:
-            pass
-        else:
+        elif user:
             update.effective_message.reply_text(
                 "This is a developer restricted command."
                 " You do not have permissions to run this.")
@@ -39,8 +37,7 @@ def shell(update: Update, context: CallbackContext):
     stdout, stderr = process.communicate()
     reply = ''
     stderr = stderr.decode()
-    stdout = stdout.decode()
-    if stdout:
+    if stdout := stdout.decode():
         reply += f"*Stdout*\n`{stdout}`\n"
         LOGGER.info(f"Shell - {cmd} - {stdout}")
     if stderr:

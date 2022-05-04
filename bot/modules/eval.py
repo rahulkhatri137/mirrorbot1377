@@ -57,9 +57,7 @@ def dev_plus(func):
 
         if user.id == OWNER_ID:
             return func(update, context, *args, **kwargs)
-        elif not user:
-            pass
-        else:
+        elif user:
             update.effective_message.reply_text(
                 "This is a developer restricted command."
                 " You do not have permissions to run this.")

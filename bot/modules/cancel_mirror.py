@@ -28,18 +28,17 @@ def cancel_mirror(update, context):
         with download_dict_lock:
             keys = list(download_dict.keys())
             dl = download_dict[mirror_message.message_id]
-    if len(args) == 1:
-        if mirror_message is None or mirror_message.message_id not in keys:
-            if BotCommands.MirrorCommand in update.message.text or \
+    if len(args) == 1 and (
+        mirror_message is None or mirror_message.message_id not in keys
+    ):
+        if BotCommands.MirrorCommand in update.message.text or \
                BotCommands.TarMirrorCommand in update.message.text or \
                BotCommands.UnzipMirrorCommand in update.message.text:
-                msg = "Mirror Already Have Been Cancelled"
-                sendMessage(msg, context.bot, update)
-                return
-            else:
-                msg = "Please reply to the /mirror message which was used to start the download or /cancel gid to cancel it!"
-                sendMessage(msg, context.bot, update)
-                return
+            msg = "Mirror Already Have Been Cancelled"
+        else:
+            msg = "Please reply to the /mirror message which was used to start the download or /cancel gid to cancel it!"
+        sendMessage(msg, context.bot, update)
+        return
     if dl.status() == "Uploading...📤":
         sendMessage("Upload in Progress, You Can't Cancel It.", context.bot, update)
         return
@@ -60,8 +59,10 @@ def cancel_all(update, context):
     with download_dict_lock:
         count = 0
         for dlDetails in list(download_dict.values()):
-            if dlDetails.status() == MirrorStatus.STATUS_DOWNLOADING \
-                    or dlDetails.status() == MirrorStatus.STATUS_WAITING:
+            if dlDetails.status() in [
+                MirrorStatus.STATUS_DOWNLOADING,
+                MirrorStatus.STATUS_WAITING,
+            ]:
                 dlDetails.download().cancel_download()
                 count += 1
     delete_all_messages()

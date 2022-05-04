@@ -61,15 +61,14 @@ Type /{BotCommands.HelpCommand} to get a list of available commands
 
 @run_async
 def chat_list(update, context):
-    chatlist =''
-    chatlist += '\n'.join(str(id) for id in AUTHORIZED_CHATS)
+    chatlist = '' + '\n'.join(str(id) for id in AUTHORIZED_CHATS)
     sendMessage(f'<b>Authorized List:</b>\n{chatlist}\n', context.bot, update)
 
 
 @run_async
 def restart(update, context):
     restart_message = sendMessage("Restarting, Please wait!", context.bot, update)
-    LOGGER.info(f'Restarting the Bot...')
+    LOGGER.info('Restarting the Bot...')
     # Save restart message object in order to reply to it after restarting
     fs_utils.clean_all()
     with open('restart.pickle', 'wb') as status:
